@@ -1,4 +1,5 @@
 import os
+import cv2
 import numpy as np
 import h5py
 import json
@@ -130,6 +131,9 @@ def create_input_files(dataset, karpathy_json_path, image_folder, captions_per_i
                     img = np.concatenate([img, img, img], axis=2)  # [256, 256, 1+1+1]
                 img = np.array(Image.fromarray(img).resize((256, 256)))
                 # img = imresize(img, (256, 256))
+                if len(img.shape) > 2 and img.shape[2] == 4:
+                    #convert the image from RGBA2RGB
+                    img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
                 img = img.transpose(2, 0, 1)
                 assert img.shape == (3, 256, 256)
                 assert np.max(img) <= 255
